@@ -20,6 +20,7 @@ public class Controller {
         return phoneBookService.list();
     }
 
+    @PostMapping(path = "phoneBook/add")
     public ResponseEntity<?> add(@RequestBody PhoneBookEntry phoneBookEntry){
         try {
             phoneBookService.add(phoneBookEntry);
@@ -42,7 +43,7 @@ public class Controller {
     @PutMapping(path = "phoneBook/deleteByNumber")
     public ResponseEntity<?> deleteByNumber(@RequestParam String number){
         try {
-            phoneBookService.deleteByNumber(number);
+            phoneBookService.deleteByPhoneNumber(number);
         }catch(Exception e){
             return new ResponseEntity<Error>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -8,6 +8,6 @@ public interface PhoneBookService {
     List<PhoneBookEntry> list();
     void add(PhoneBookEntry phoneBookEntry);
     void deleteByName(String name);
-    void deleteByNumber(String phoneNumber);
+    void deleteByPhoneNumber(String phoneNumber);
 }
 

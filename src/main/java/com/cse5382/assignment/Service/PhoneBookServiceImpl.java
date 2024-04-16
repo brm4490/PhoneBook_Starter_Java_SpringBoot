@@ -12,13 +12,13 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PhoneBookServiceImpl implements PhoneBookService{
+public class PhoneBookServiceImpl implements PhoneBookService {
 
     @Autowired
     PhoneBookRepository phoneBookRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhoneBookServiceImpl.class);
-    
+
     @Override
     public List<PhoneBookEntry> list() {
         return phoneBookRepository.findAll();
@@ -26,18 +26,34 @@ public class PhoneBookServiceImpl implements PhoneBookService{
 
     @Override
     public void deleteByName(String name) {
-        phoneBookRepository.deleteByName(name);
+        LOGGER.info("Trying to delete entry by name: {}", name);
+        List<PhoneBookEntry> entriesToFilter = phoneBookRepository.findAll();
+
+        for (PhoneBookEntry entry : entriesToFilter) {
+            if (entry.getName().equals(name)) {
+                phoneBookRepository.delete(entry);
+                LOGGER.info("Deleted entry with name: {}", entry.getName());
+                break;
+            }
+        }
     }
 
-
     @Override
-    public void deleteByNumber(String phoneNumber) {
-        phoneBookRepository.deleteByPhoneNumber(phoneNumber);
+    public void deleteByPhoneNumber(String number) {
+        LOGGER.info("Trying to delete entry by phone number: {}", number);
+        List<PhoneBookEntry> entriesToFilter = phoneBookRepository.findAll();
+
+        for (PhoneBookEntry entry : entriesToFilter) {
+            if (entry.getPhoneNumber().equals(number)) {
+                phoneBookRepository.delete(entry);
+                LOGGER.info("Deleted entry with phone number: {}", entry.getPhoneNumber());
+                break;
+            }
+        }
     }
 
     @Override
     public void add(PhoneBookEntry phoneBookEntry) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        phoneBookRepository.save(phoneBookEntry);
     }
 }

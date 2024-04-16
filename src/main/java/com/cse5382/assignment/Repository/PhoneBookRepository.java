@@ -6,9 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PhoneBookRepository extends JpaRepository<PhoneBookEntry, Long>{
-
-    public void deleteByName(String name);
-    public void deleteByPhoneNumber(String phoneNumber);
-
-}
+public interface PhoneBookRepository extends JpaRepository<PhoneBookEntry, Long>{}
