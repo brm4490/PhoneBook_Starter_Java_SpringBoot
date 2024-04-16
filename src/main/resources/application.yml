@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/phonebook
+    username: postgres
+    password: EiH39LzSyQQn-Hz
+    driver-class-name: org.postgresql.Driver
+
+//TODO:
+  #If you do use a client/server database product, you should create a config file to contain database
+  #connectivity information and have your script read that rather than hardcoding those values in the
+  #application.
+
