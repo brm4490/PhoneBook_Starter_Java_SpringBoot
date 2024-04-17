@@ -1,7 +1,11 @@
 package com.cse5382.assignment.Controller;
 
+import com.cse5382.assignment.AssignmentApplication;
 import com.cse5382.assignment.Model.PhoneBookEntry;
 import com.cse5382.assignment.Service.PhoneBookService;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +15,8 @@ import java.util.List;
 
 @RestController
 public class Controller {
+
+    Logger logger = LogManager.getLogger(AssignmentApplication.class);
     
     @Autowired
     PhoneBookService phoneBookService;
