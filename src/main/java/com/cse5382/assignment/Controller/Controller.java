@@ -1,6 +1,7 @@
 package com.cse5382.assignment.Controller;
 
 import com.cse5382.assignment.AssignmentApplication;
+import com.cse5382.assignment.Exception.InvalidPhonebookEntryException;
 import com.cse5382.assignment.Model.PhoneBookEntry;
 import com.cse5382.assignment.Service.PhoneBookService;
 
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class Controller {
@@ -30,8 +32,10 @@ public class Controller {
     public ResponseEntity<?> add(@RequestBody PhoneBookEntry phoneBookEntry){
         try {
             phoneBookService.add(phoneBookEntry);
-        }catch(Exception e){
-            return new ResponseEntity<Error>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(InvalidPhonebookEntryException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch(Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -40,8 +44,10 @@ public class Controller {
     public ResponseEntity<?> deleteByName(@RequestParam String name){
         try {
             phoneBookService.deleteByName(name);
-        }catch(Exception e){
-            return new ResponseEntity<Error>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -50,7 +56,9 @@ public class Controller {
     public ResponseEntity<?> deleteByNumber(@RequestParam String number){
         try {
             phoneBookService.deleteByPhoneNumber(number);
-        }catch(Exception e){
+        } catch(NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch(Exception e){
             return new ResponseEntity<Error>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);

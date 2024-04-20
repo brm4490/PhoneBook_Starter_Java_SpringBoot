@@ -1,6 +1,7 @@
 package com.cse5382.assignment.Service;
 
 import com.cse5382.assignment.Repository.PhoneBookRepository;
+import com.cse5382.assignment.Exception.InvalidPhonebookEntryException;
 import com.cse5382.assignment.Model.PhoneBookEntry;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,40 +22,50 @@ public class PhoneBookService {
     @Autowired
     PhoneBookRepository phoneBookRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PhoneBookService.class);
+    private static final Logger logger = LoggerFactory.getLogger(PhoneBookService.class);
 
     public List<PhoneBookEntry> list() {
+        logger.info("Trying to list all entries");
         return phoneBookRepository.findAll();
     }
 
     public void deleteByName(String name) {
-        LOGGER.info("Trying to delete entry by name: {}", name);
+        logger.info("Trying to delete entry by name: {}", name);
         List<PhoneBookEntry> entriesToFilter = phoneBookRepository.findAll();
 
         for (PhoneBookEntry entry : entriesToFilter) {
             if (entry.getName().equals(name)) {
                 phoneBookRepository.delete(entry);
-                LOGGER.info("Deleted entry with name: {}", entry.getName());
-                break;
+                logger.info("Deleted entry with name: {}", entry.getName());
+                return;
             }
         }
+
+        throw new NoSuchElementException("No Such Name Exists As: " + name);
     }
 
     public void deleteByPhoneNumber(String number) {
-        LOGGER.info("Trying to delete entry by phone number: {}", number);
+        logger.info("Trying to delete entry by phone number: {}", number);
         List<PhoneBookEntry> entriesToFilter = phoneBookRepository.findAll();
 
         for (PhoneBookEntry entry : entriesToFilter) {
             if (entry.getPhoneNumber().equals(number)) {
                 phoneBookRepository.delete(entry);
-                LOGGER.info("Deleted entry with phone number: {}", entry.getPhoneNumber());
-                break;
+                logger.info("Deleted entry with phone number: {}", entry.getPhoneNumber());
+                return;
             }
         }
+
+        throw new NoSuchElementException("No Such Number Exists As: " + number);
     }
 
     public void add(PhoneBookEntry phoneBookEntry) {
-        phoneBookRepository.save(phoneBookEntry);
+        logger.info("Trying to add phonebook entry with name: " + phoneBookEntry.getName());
+        if(isValidName(phoneBookEntry.getName()) && isValidPhoneNumber(phoneBookEntry.getPhoneNumber())) {
+            phoneBookRepository.save(phoneBookEntry);
+        } else {
+            throw new InvalidPhonebookEntryException("Invalid Phonebook Entry!");
+        }
     }
 
     public boolean isValidPhoneNumber(String number) {
@@ -116,5 +128,17 @@ public class PhoneBookService {
         return  NorthAmericanNumberMatcher.matches() ||
                 IntraNetworkNumberMatcher.matches() ||
                 DanishNumberMatcher.matches();
+    }
+
+    public boolean isValidName(String name) {
+        Pattern NAME = Pattern.compile("((O')|(O’))?[a-zA-Z]{2,25}");
+        Pattern MIDDLE_INIT = Pattern.compile("([a-zA-Z]\\.)");
+        Pattern SEP = Pattern.compile("((, )|(-)| )");
+
+        Pattern Name = Pattern.compile(NAME + "(" + SEP + NAME + ")?((" + SEP + NAME + ")|(" + SEP + MIDDLE_INIT + "))?");
+
+        Matcher NameMatcher = Name.matcher(name);
+
+        return NameMatcher.matches();
     }
 }

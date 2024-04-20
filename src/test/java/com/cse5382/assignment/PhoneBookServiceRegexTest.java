@@ -79,4 +79,48 @@ public class PhoneBookServiceRegexTest {
             assertEquals(expected, actual, "Validation failed for number: " + number);
         }
     }
+
+    @Test
+    public void testValidNames() {
+        String[] validNames = {
+            "Bruce Schneier",
+            "Schneier, Bruce",
+            "Schneier, Bruce Wayne",
+            "O'Malley, John F.",
+            "John O’Malley-Smith",
+            "Cher"
+        };
+
+        for (String name : validNames) {
+            boolean expected = true;  
+            boolean actual = phoneBookService.isValidName(name);
+
+            System.err.println("Expected Result: " + expected);
+            System.err.println("Actual Result: " + actual);
+
+            assertEquals(expected, actual, "Validation failed for name: " + name);
+        }
+    }
+    
+    @Test
+    public void testInvalidNames() {
+        String[] invalidNames = {
+            "Ron O’’Henry",
+            "Ron O’Henry-Smith-Barnes",
+            "L33t Hacker",
+            "<Script>alert(“XSS”)</Script>",
+            "Brad Everett Samuel Smith",
+            "select * from users;"
+        };
+
+        for (String name : invalidNames) {
+            boolean expected = false;  
+            boolean actual = phoneBookService.isValidName(name);
+
+            System.err.println("Expected Result: " + expected);
+            System.err.println("Actual Result: " + actual);
+
+            assertEquals(expected, actual, "Validation failed for name: " + name);
+        }
+    }
 }

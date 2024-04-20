@@ -12,7 +12,7 @@ import com.cse5382.assignment.Model.UserEntry;
 import com.cse5382.assignment.Service.UserService;
 
 @SpringBootApplication
-@ComponentScan({"com.cse5382.assignment.Adapter", "com.cse5382.assignment.Controller", "com.cse5382.assignment.Model", "com.cse5382.assignment.Service", "com.cse5382.assignment.Repository", "com.cse5382.assignment.Security"})
+@ComponentScan({"com.cse5382.assignment.Adapter", "com.cse5382.assignment.Exception", "com.cse5382.assignment.Controller", "com.cse5382.assignment.Model", "com.cse5382.assignment.Service", "com.cse5382.assignment.Repository", "com.cse5382.assignment.Security"})
 public class AssignmentApplication implements CommandLineRunner {
 
 	Logger logger = LogManager.getLogger(AssignmentApplication.class);
